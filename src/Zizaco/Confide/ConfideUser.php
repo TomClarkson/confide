@@ -2,6 +2,7 @@
 
 use Illuminate\Auth\UserInterface;
 use J20\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class ConfideUser extends Eloquent implements UserInterface {
 
