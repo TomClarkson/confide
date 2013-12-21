@@ -154,30 +154,30 @@ class ConfideUser extends Eloquent implements UserInterface {
      * @param \Closure $afterSave
      * @return bool
      */
-    public function save( array $rules = array(), array $customMessages = array(), array $options = array(), \Closure $beforeSave = null, \Closure $afterSave = null )
-    {
-        $duplicated = false;
+    // public function save( array $rules = array(), array $customMessages = array(), array $options = array(), \Closure $beforeSave = null, \Closure $afterSave = null )
+    // {
+    //     $duplicated = false;
 
-        if(! $this->id)
-        {
-            $duplicated = static::$app['confide.repository']->userExists( $this );
-        }
+    //     if(! $this->id)
+    //     {
+    //         $duplicated = static::$app['confide.repository']->userExists( $this );
+    //     }
 
-        if(! $duplicated)
-        {
-            return $this->real_save( $rules, $customMessages, $options, $beforeSave, $afterSave );
-        }
-        else
-        {
-            static::$app['confide.repository']->validate();
-            $this->validationErrors->add(
-                'duplicated',
-                static::$app['translator']->get('confide::confide.alerts.duplicated_credentials')
-            );
+    //     if(! $duplicated)
+    //     {
+    //         return $this->real_save( $rules, $customMessages, $options, $beforeSave, $afterSave );
+    //     }
+    //     else
+    //     {
+    //         static::$app['confide.repository']->validate();
+    //         $this->validationErrors->add(
+    //             'duplicated',
+    //             static::$app['translator']->get('confide::confide.alerts.duplicated_credentials')
+    //         );
 
-            return false;
-        }
-    }
+    //         return false;
+    //     }
+    // }
 
     /**
      * Ardent method overloading:
