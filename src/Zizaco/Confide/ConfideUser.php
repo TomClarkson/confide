@@ -1,10 +1,10 @@
 <?php namespace Zizaco\Confide;
 
 use Illuminate\Auth\UserInterface;
+use LaravelBook\Ardent\Ardent;
 use J20\Uuid\Uuid;
-use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class ConfideUser extends Eloquent implements UserInterface {
+class ConfideUser extends Ardent implements UserInterface {
 
     /**
      * The database table used by the model.
@@ -142,6 +142,40 @@ class ConfideUser extends Eloquent implements UserInterface {
             return false;
         }
     }
+    
+        /**
+    * Get the token value for the "remember me" session.
+    *
+    * @see \Illuminate\Auth\UserInterface
+    * @return string
+    */
+    public function getRememberToken()
+    {
+        return $this->remember_token;
+    }
+
+    /**
+    * Set the token value for the "remember me" session.
+    *
+    * @see \Illuminate\Auth\UserInterface
+    * @param string $value
+    * @return void
+    */
+    public function setRememberToken($value)
+    {
+        $this->remember_token = $value;
+    }
+
+    /**
+    * Get the column name for the "remember me" token.
+    *
+    * @see \Illuminate\Auth\UserInterface
+    * @return string
+    */
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
 
     /**
      * Overwrite the Ardent save method. Saves model into
@@ -154,30 +188,30 @@ class ConfideUser extends Eloquent implements UserInterface {
      * @param \Closure $afterSave
      * @return bool
      */
-    // public function save( array $rules = array(), array $customMessages = array(), array $options = array(), \Closure $beforeSave = null, \Closure $afterSave = null )
-    // {
-    //     $duplicated = false;
+    public function save( array $rules = array(), array $customMessages = array(), array $options = array(), \Closure $beforeSave = null, \Closure $afterSave = null )
+    {
+        $duplicated = false;
 
-    //     if(! $this->id)
-    //     {
-    //         $duplicated = static::$app['confide.repository']->userExists( $this );
-    //     }
+        if(! $this->id)
+        {
+            $duplicated = static::$app['confide.repository']->userExists( $this );
+        }
 
-    //     if(! $duplicated)
-    //     {
-    //         return $this->real_save( $rules, $customMessages, $options, $beforeSave, $afterSave );
-    //     }
-    //     else
-    //     {
-    //         static::$app['confide.repository']->validate();
-    //         $this->validationErrors->add(
-    //             'duplicated',
-    //             static::$app['translator']->get('confide::confide.alerts.duplicated_credentials')
-    //         );
+        if(! $duplicated)
+        {
+            return $this->real_save( $rules, $customMessages, $options, $beforeSave, $afterSave );
+        }
+        else
+        {
+            static::$app['confide.repository']->validate();
+            $this->validationErrors->add(
+                'duplicated',
+                static::$app['translator']->get('confide::confide.alerts.duplicated_credentials')
+            );
 
-    //         return false;
-    //     }
-    // }
+            return false;
+        }
+    }
 
     /**
      * Ardent method overloading:
